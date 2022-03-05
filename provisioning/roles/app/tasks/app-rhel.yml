@@ -1,0 +1,33 @@
+---
+- name: set selinux permissive
+  selinux:
+    policy: targeted
+    state: permissive
+
+- name: set up docker repo
+  get_url:
+    url: "{{ docker_ce_repo }}"
+    dest: /etc/yum.repos.d/docer-ce.repo
+  become: yes
+
+- name: Install docker
+  yum:
+    name: "docker-ce"
+    state: latest
+
+- name: enable docker service
+  service:
+    name: docker
+    state: started
+    enabled: yes
+
+- name: enable promiscuous mode on eth1
+  command: ip link set dev eth1 promisc on
+
+- name: permanently enable promiscuous mode on eth1
+  copy:
+    src: ../files/etc/NetworkManager/dispatcher.d/30-promisc
+    dest: /etc/NetworkManager/dispatcher.d/30-promisc
+    owner: root
+    group: root
+    mode: '0755'

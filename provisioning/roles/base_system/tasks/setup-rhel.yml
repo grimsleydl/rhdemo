@@ -1,0 +1,90 @@
+---
+- name: Upgrading all packages (RHEL-based)
+  yum:
+    name: "*"
+    state: latest
+
+- name: Upgrading all packages (RHEL-based)
+  yum:
+    name: "netcat"
+    state: latest
+
+# https://github.com/elastic/ansible-elastic-cloud-enterprise/issues/29 for this
+- name: Ensure kernel modules are loaded
+  template:
+    src: templates/module.conf.j2
+    dest: "/etc/modules-load.d/{{ item.name }}.conf"
+    mode: 0644
+  with_items:
+  - { name: 'br_netfilter', kernel_module: 'br_netfilter' }
+  - { name: 'overlay', kernel_module: 'overlay' }
+
+- name: Add the br_netfilter module
+  modprobe:
+    name: br_netfilter
+    state: present
+
+- name: Add the overlay module
+  modprobe:
+    name: overlay
+    state: present
+
+- name: Set up routing in sysctl
+  sysctl:
+    name: "net.ipv4.ip_forward "
+    value: "1"
+    state: present
+
+- name: Set up bridging in sysctl
+  sysctl:
+    name: "net.bridge.bridge-nf-call-iptables"
+    value: "1"
+    state: present
+
+- name: Enable loose reverse path filtering
+  sysctl:
+    name: "net.ipv4.conf.all.rp_filter"
+    value: "2"
+    state: present
+
+- name: Set up ip6 bridging in sysctl
+  sysctl:
+    name: "net.bridge.bridge-nf-call-ip6tables"
+    value: "1"
+    state: present
+
+- name: Disable swap
+  command: swapoff -a
+
+- name: remove swap from fstab
+  mount:
+    name: none
+    src: /dev/mapper/rl_rocky8-swap
+    fstype: swap
+    state: absent
+  when: ansible_os_family == "Rocky"
+
+- name: Remove the swap logical volume.
+  lvol:
+    vg: rl_rocky8
+    lv: swap
+    state: absent
+    force: true
+  when: ansible_os_family == "Rocky"
+
+- name: cleanup cmdline, enable persistent net interface names
+  command: "grubby --update-kernel=ALL --remove-args 'crashkernel resume rd.lvm.lv=rl_rocky8/swap'"
+  notify:
+    - run grub2-mkconfig
+  when: ansible_os_family == "Rocky"
+
+- name: rebuild grub
+  meta: "flush_handlers"
+
+- name: Reboot host
+  reboot:
+    msg: "Ansible-initiated reboot"
+    connect_timeout: 5
+    reboot_timeout: 600
+    pre_reboot_delay: 0
+    test_command: uptime

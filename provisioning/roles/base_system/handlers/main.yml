@@ -1,0 +1,7 @@
+---
+- name: run update-grub
+  shell: /usr/sbin/update-grub
+
+- name: run grub2-mkconfig
+  shell: /usr/sbin/grub2-mkconfig -o /boot/grub2/grub.cfg
+
