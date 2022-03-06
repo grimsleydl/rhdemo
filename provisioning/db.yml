@@ -1,0 +1,8 @@
+---
+- name: "Configure db nodes"
+  hosts: db
+  roles:
+    - role: base_system
+      become: true
+    - role: db
+      become: true
