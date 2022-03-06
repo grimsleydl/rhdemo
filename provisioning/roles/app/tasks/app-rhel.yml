@@ -21,6 +21,17 @@
     state: started
     enabled: yes
 
+- name: ensure /root/bin exists
+  file:
+    path: /root/bin
+    state: directory
+
+- name: install docker compose
+  get_url:
+    url: "{{ docker_compose_path }}"
+    dest: /root/bin/docker-compose
+    mode: '0755'
+
 - name: enable promiscuous mode on eth1
   command: ip link set dev eth1 promisc on
 
