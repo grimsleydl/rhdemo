@@ -1,10 +1,12 @@
 ---
-- name: Upgrading all packages (RHEL-based)
+- name: Update all packages
   yum:
     name: "*"
     state: latest
+    update_cache: yes
+    update_only: yes
 
-- name: Upgrading all packages (RHEL-based)
+- name: install netcat
   yum:
     name: "netcat"
     state: latest
@@ -81,7 +83,7 @@
 - name: rebuild grub
   meta: "flush_handlers"
 
-- name: Reboot host
+- name: Reboot guest
   reboot:
     msg: "Ansible-initiated reboot"
     connect_timeout: 5
