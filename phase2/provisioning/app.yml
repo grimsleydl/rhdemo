@@ -1,0 +1,8 @@
+---
+- name: "Configure app servers"
+  hosts: app
+  roles:
+    - role: base_system
+      become: true
+    - role: app
+      become: true

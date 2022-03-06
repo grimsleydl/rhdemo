@@ -1,0 +1,16 @@
+---
+- name: set selinux permissive
+  selinux:
+    policy: targeted
+    state: permissive
+
+- name: ensure /root/bin exists
+  file:
+    path: /root/bin
+    state: directory
+
+- name: install docker compose
+  get_url:
+    url: "{{ docker_compose_path }}"
+    dest: /root/bin/docker-compose
+    mode: '0755'

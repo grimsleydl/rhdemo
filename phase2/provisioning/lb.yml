@@ -1,0 +1,8 @@
+---
+- name: "Configure load balancer"
+  hosts: lb
+  roles:
+    - role: base_system
+      become: true
+    - role: lb
+      become: true

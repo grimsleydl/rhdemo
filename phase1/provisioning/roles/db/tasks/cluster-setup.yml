@@ -1,0 +1,66 @@
+---
+- name: check if file exists
+  local_action: stat path="{{ playbook_dir + '/secret/' + inventory_hostname + '--user_pass--hacluster.txt' }}"
+  # path=../../../secret/db-1--user_pass--hacluster.txt
+  register: hacluster_pw_file
+  become: false
+
+- name: Verifying if hacluster password file exists
+  debug: msg="File {{ hacluster_pw_file }} exists"
+  when: hacluster_pw_file.stat.exists and hacluster_pw_file.stat.size > 0
+  register: hacluster_pw_exists
+
+- name: Set hacluster password if already created
+  set_fact:
+    hacluster_existing_pw: "{{ lookup('file',playbook_dir + '/secret/' + inventory_hostname + '--user_pass--hacluster.txt') }}"
+  when: hacluster_pw_exists is defined and hacluster_pw_file.stat.exists
+
+- name: Generate password for hacluster user
+  local_action: shell pwgen -s -N 1 30
+  become: false
+  register: hacluster_password
+  with_items: hacluster
+  run_once: true
+  when: hacluster_existing_pw is not defined
+
+- name: Generate encrypted hacluster password
+  local_action: shell python3 -c 'import crypt; print(crypt.crypt( "{{ hacluster_password.results.0.stdout }}", crypt.mksalt(crypt.METHOD_SHA512)))'
+  become: false
+  register: encrypted_hacluster_password
+  run_once: true
+  when: hacluster_existing_pw is not defined
+
+- name: Encrypt existing hacluster password
+  local_action: shell python3 -c 'import crypt; print(crypt.crypt( "{{ hacluster_existing_pw }}", crypt.mksalt(crypt.METHOD_SHA512)))'
+  become: false
+  register: encrypted_existing_hacluster_password
+  run_once: true
+  when: hacluster_existing_pw is defined
+
+- name: Reset hacluster user password to existing password
+  user:
+    name: hacluster
+    password: "{{ encrypted_existing_hacluster_password.stdout }}"
+  register: hacluster_pw_unchanged
+  when: hacluster_existing_pw is defined
+
+- name: Update hacluster user password
+  user:
+    name: hacluster
+    password: "{{ encrypted_hacluster_password.stdout }}"
+  register: hacluster_pw_updated
+  when: hacluster_existing_pw is not defined
+
+- debug:
+    msg: "hacluster password reset to: {{ hacluster_existing_pw }}, clobbering existing password"
+  when: hacluster_existing_pw is defined
+
+- debug:
+    msg: "hacluster password set to: {{ hacluster_password.results.0.stdout }}"
+  when: hacluster_pw_updated is defined and hacluster_existing_pw is not defined
+
+- name: Save Passwords Locally
+  local_action: copy content={{ item }} dest={{ playbook_dir }}/secret/{{ inventory_hostname }}--user_pass--hacluster.txt
+  become: false
+  with_items: "{{ hacluster_password.results.0.stdout }}"
+  when: hacluster_pw_updated is defined and hacluster_existing_pw is not defined

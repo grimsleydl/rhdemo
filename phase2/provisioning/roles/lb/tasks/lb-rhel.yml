@@ -1,0 +1,25 @@
+---
+- name: Install nginx on LB
+  yum:
+    name: "nginx"
+    state: latest
+
+- name: Copy nginx.conf
+  copy:
+    src: ../files/etc/nginx/nginx.conf
+    dest: /etc/nginx/nginx.conf
+    owner: root
+    group: root
+    mode: '0644'
+  notify: Reload nginx
+- name: allow nginx proxying
+  command: setsebool -P httpd_can_network_connect on
+
+# - name: Copy nginx lb file
+#   ansible.builtin.copy:
+#     src: ../files/etc/nginx/conf.d/lb.example.com.conf
+#     dest: /etc/nginx/conf.d/lb.example.com.conf
+#     owner: root
+#     group: root
+#     mode: '0644'
+#   notify: Reload nginx

@@ -1,0 +1,16 @@
+---
+- name: "Configure db nodes"
+  hosts: db
+  roles:
+    - role: base_system
+      become: true
+      tags: provision
+    - role: db
+      become: true
+      tags: setup
+  tasks:
+    - import_tasks: roles/db/tasks/db-storage.yml
+      become: true
+    - import_tasks: roles/db/tasks/cluster-setup.yml
+      become: true
+      tags: pcs-setup

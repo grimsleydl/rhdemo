@@ -1,0 +1,6 @@
+---
+- include_tasks: db-rhel.yml
+  when: ansible_os_family == "RedHat" or ansible_os_family == "Rocky"
+  tags: provision
+
+# - include_tasks: setup-all.yml
