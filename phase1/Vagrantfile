@@ -104,7 +104,8 @@ Vagrant.configure('2') do |config|
     end
   end
 
-  (1..2).each do |node_id|
+  db_nodes = 2
+  (1..db_nodes).each do |node_id|
     config.vm.define "db-#{node_id}" do |node|
       config.vm.provider :libvirt do |libvirt|
         libvirt.memory = 2048
@@ -116,14 +117,20 @@ Vagrant.configure('2') do |config|
       node.vm.network 'private_network', ip: "#{app_subnet}.#{10 + node_id}", netmask: '255.255.255.0'
       node.vm.network 'private_network', ip: "#{cluster_subnet}.#{30 + node_id}", netmask: '255.255.255.0'
       node.vm.network 'private_network', ip: "#{iscsi_subnet}.#{30 + node_id}", netmask: '255.255.255.0'
-      node.vm.provision :ansible do |ansible|
-        ansible.groups = {
-          'db' => ['db-1', 'db-2']
-        }
-        # Disable default limit to connect to all the nodes
-        ansible.limit = 'all'
-        ansible.playbook = 'provisioning/db.yml'
-        ansible.tags = ['provision', 'setup', 'storage']
+      if node_id == db_nodes
+        node.vm.provision :ansible do |ansible|
+          ansible.groups = {
+            'db' => ['db-1', 'db-2']
+          }
+          ansible.host_vars = {
+            'db-1' => { 'vm_name' => "#{File.basename(Dir.getwd)}_db-1" },
+            'db-2' => { 'vm_name' => "#{File.basename(Dir.getwd)}_db-2" }
+          }
+          # Disable default limit to connect to all the nodes
+          ansible.limit = 'all'
+          ansible.playbook = 'provisioning/db.yml'
+          ansible.tags = ['provision']
+        end
       end
     end
   end

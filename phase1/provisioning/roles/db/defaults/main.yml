@@ -7,6 +7,8 @@ cluster_packages:
   - iptables-services
   - dlm
   - lvm2-lockd
+  - fence-agents-virsh
+  - mariadb-server
 
 iscsi_target: 192.168.140.1
 target_lun: iqn.2022-03.com.example:de640a58c3d6f70d70e9

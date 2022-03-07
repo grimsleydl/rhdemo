@@ -3,7 +3,12 @@
     path: /etc/lvm/lvm.conf
     regexp: 'use_lvmlockd = 0'
     replace: 'use_lvmlockd = 1'
-  tags: [ setup, storage ]
+
+- name: set lvm system id source
+  replace:
+    path: /etc/lvm/lvm.conf
+    regexp: 'system_id_source = "none"'
+    replace: 'system_id_source = "uname"'
 
 - name: Perform a discovery on 192.168.140.1 and show available target nodes
   open_iscsi:
@@ -11,25 +16,22 @@
     discover: yes
     ip: "{{ iscsi_target }}"
     login: yes
-  tags: storage
 
 - name: Connect to the target
   open_iscsi:
     login: yes
     target: "{{ target_lun }}"
     auto_node_startup: yes
-  tags: storage
 
 - name: Fix iscsi on boot
   copy:
     src: "../files/etc/systemd/system/iscsi-boot.service"
     dest: "/etc/systemd/system/iscsi-boot.service"
     mode: 0755
-  tags: storage
 
 - name: Enable iscsi service on boot
   service:
     name: iscsi-boot
     state: started
     enabled: yes
-  tags: storage
+

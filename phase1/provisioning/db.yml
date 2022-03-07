@@ -7,10 +7,14 @@
       tags: provision
     - role: db
       become: true
-      tags: setup
+      tags: [ provision, db-setup ]
   tasks:
     - import_tasks: roles/db/tasks/db-storage.yml
       become: true
+      tags: pcs-setup
     - import_tasks: roles/db/tasks/cluster-setup.yml
+      become: true
+      tags: pcs-setup
+    - import_tasks: roles/db/tasks/cluster-post.yml
       become: true
       tags: pcs-setup

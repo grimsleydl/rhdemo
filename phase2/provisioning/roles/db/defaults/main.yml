@@ -1,9 +1,0 @@
----
-cluster_packages:
-  - pacemaker
-  - pcs
-  - targetcli
-  - iscsi-initiator-utils
-  - iptables-services
-  - dlm
-  - lvm2-lockd

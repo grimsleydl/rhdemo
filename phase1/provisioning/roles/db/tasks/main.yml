@@ -1,6 +1,72 @@
 ---
-- include_tasks: db-rhel.yml
-  when: ansible_os_family == "RedHat" or ansible_os_family == "Rocky"
-  tags: provision
+- name: Enable HA repo
+  command: yum-config-manager --enable ha
 
-# - include_tasks: setup-all.yml
+- name: Enable resilient-storage repo
+  command: yum-config-manager --enable resilient-storage
+
+- name: Install pcs packages
+  yum:
+    name: "{{ item }}"
+    state: latest
+  loop: "{{ cluster_packages | flatten(levels=1) }}"
+  tags: [ setup, packages, clustering ]
+
+- name: set selinux permissive
+  selinux:
+    policy: targeted
+    state: permissive
+
+- name: ensure /san/mysql-fs exists
+  file:
+    path: /san/mysql-fs
+    state: directory
+  tags: setup
+
+- name: disable firewalld service
+  service:
+    name: firewalld
+    state: stopped
+    enabled: no
+  tags: setup
+
+- name: enable iptables service
+  service:
+    name: iptables
+    state: started
+    enabled: yes
+  tags: setup
+
+- name: Allow cluster traffic
+  ansible.builtin.iptables:
+    chain: INPUT
+    in_interface: eth3
+    jump: ACCEPT
+  tags: setup
+
+- name: Allow cluster traffic
+  ansible.builtin.iptables:
+    chain: INPUT
+    in_interface: eth4
+    jump: ACCEPT
+  tags: setup
+
+- name: create ssh directory
+  file:
+    path: /root/.ssh
+    owner: root
+    group: root
+    mode: 0700
+    state: directory
+
+- name: copy fence ssh key
+  copy:
+    src: "~/.ssh/id_ed25519_rhdemo"
+    dest: "/root/.ssh/id_ed25519_fence"
+    mode: 0600
+
+- name: fix /etc/hosts
+  lineinfile:
+    path: /etc/hosts
+    state: absent
+    regexp: '^127\.0\.1\.1.*{{ inventory_hostname }}.*'
