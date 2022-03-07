@@ -5,8 +5,10 @@ description = ""
 authors = ["david grimsley <grimsleydl@gmail.com>"]
 
 [tool.poetry.dependencies]
-python = "^3.9"
+python = "^3.10"
 Flask = "^2.0.3"
+# mariadb = "^1.0.10"
+mariadb = "^1.0.10"
 
 [tool.poetry.dev-dependencies]
 

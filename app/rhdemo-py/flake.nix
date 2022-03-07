@@ -17,27 +17,27 @@
       config.allowBroken = true;
     };
     p2n = pkgs.poetry2nix;
-    python = "python39";
+    python = "python310";
 
     customOverrides = self: super: { };
     packageName = "rhdemo-py";
 
     app = p2n.mkPoetryApplication {
       projectDir = ./.;
-      python = pkgs.python39;
+      python = pkgs.python310;
       overrides =
         [ pkgs.poetry2nix.defaultPoetryOverrides customOverrides ];
     };
     appEnv = p2n.mkPoetryEnv {
       projectDir = ./.;
-      python = pkgs.python39;
+      python = pkgs.python310;
       overrides = [ p2n.defaultPoetryOverrides customOverrides ];
     };
   in rec
   {
     packages.containerImage = pkgs.dockerTools.buildLayeredImage {
       name = "rhdemo-py";
-      contents = [ pkgs.python39 app pkgs.bash pkgs.coreutils ];
+      contents = [ pkgs.python310 app pkgs.bash pkgs.coreutils ];
       config = {
         Cmd = [ "${app}/bin/rhdemo-py" ];
       };
@@ -61,6 +61,10 @@
           black
           python-language-server
           pyright
+          mariadb
+          libmysqlclient
+          mariadb-connector-c
+          python310Packages.mariadb
         ];
       };
   });
