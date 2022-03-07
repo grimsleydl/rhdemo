@@ -1,0 +1,24 @@
+#+TITLE: Readme
+
+Building the nix package will require MariaDB development libraries installed locally--there's a Nixpkgs packaging bug involved here that I'm still investigating.
+
+
+To launch dev environment:
+- Install Nix on your system and enable Flakes
+  - On non-NixOS:
+    - edit either ~~/.config/nix/nix.conf~ or ~/etc/nix/nix.conf~ and add the following line to it:
+      #+begin_src
+      experimental-features = nix-command flakes
+      #+end_src
+  - On NixOS, edit your ~configuration.nix~:
+    #+begin_src
+    nix = {
+      package = pkgs.nixFlakes;
+      extraOptions = ''
+        experimental-features = nix-command flakes
+      '';
+    };
+    #+end_src
+
+- ~cd~ into the ~app/~ directory
+- run ~nix develop~
