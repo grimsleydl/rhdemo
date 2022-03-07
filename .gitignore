@@ -9,3 +9,4 @@
 
 ### Vagrant Patch ###
 *.box
+/app/.direnv/
