@@ -39,18 +39,18 @@
   command: vgchange --setautoactivation n vgsan00
   ignore_errors: yes
 
-- name: mount mysql storage
-  mount:
-    path: /san/mysql-fs
-    src: /dev/vgsan00/mysql
-    fstype: xfs
-    state: mounted
+# - name: mount mysql storage
+#   mount:
+#     path: /san/mysql-fs
+#     src: /dev/vgsan00/mysql
+#     fstype: xfs
+#     state: mounted
 
-- name: enable mariadb service
-  service:
-    name: mariadb
-    state: started
-    enabled: true
+# - name: enable mariadb service
+#   service:
+#     name: mariadb
+#     state: started
+#     enabled: true
 
 - name: copy /root/.my.cnf
   copy:
@@ -63,3 +63,45 @@
     src: "../files/etc/my.cnf"
     dest: "/etc/my.cnf"
     mode: 0644
+
+- name: set up mariadb-svc resource group
+  command: pcs resource group add mariadb-svc mariadb_ip mariadb_lvm mariadb_fs mariadb_srv
+  run_once: true
+  delegate_to: db-1
+
+- name: set up some misc mariadb-svc settings
+  command: pcs resource meta mariadb-svc migration-threshold=2 failure-timeout=60s
+  run_once: true
+  delegate_to: db-1
+
+- name: set up some misc mariadb-svc settings
+  command: pcs constraint order start lvmlockd-clone then start mariadb-svc
+  run_once: true
+  delegate_to: db-1
+
+- name: one final cluster stop/start
+  command: pcs cluster stop --all
+  run_once: true
+  delegate_to: db-1
+
+- name: Sleep for 60 seconds
+  wait_for:
+    timeout: 60
+  delegate_to: localhost
+  become: no
+
+- name: start cluster
+  command: pcs cluster start --all
+  run_once: true
+  delegate_to: db-1
+
+- name: Sleep for 30 seconds
+  wait_for:
+    timeout: 30
+  delegate_to: localhost
+  become: no
+
+- name: clean up resource noise
+  command: pcs resource cleanup mariadb-svc
+  run_once: true
+  delegate_to: db-1

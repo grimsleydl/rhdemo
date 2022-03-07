@@ -37,9 +37,15 @@
       - name: mariadb_lvm
         resource_type: 'ocf:heartbeat:LVM-activate'
         options: 'vgname=vgsan00 vg_access_mode=system_id op monitor interval=10s timeout=10s on-fail=restart'
+      - name: mariadb_fs
+        resource_type: 'ocf:heartbeat:Filesystem'
+        options: 'device="/dev/vgsan00/mysql" directory="/san/mysql-fs" fstype="xfs" op monitor interval=20s timeout=20s on-fail=restart'
       - name: mariadb_ip
         resource_type: 'ocf:heartbeat:IPaddr2'
         options: 'ip=192.168.150.200 cidr_netmask=24 op monitor interval=20s timeout=20s on-fail=restart'
+      - name: mariadb_srv
+        resource_type: 'ocf:heartbeat:mysql'
+        options: 'config="/etc/my.cnf" enable_creation="0" user="mysql" group="mysql" datadir="/san/mysql-fs/mysql" socket="/san/mysql-fs/mysql/mysql.sock" additional_parameters="--bind-address=192.168.150.200" op monitor interval="15s" timeout="15s" on-fail=restart op start interval="0" timeout="300s" op stop interval="0" timeout="300s"'
     cluster_constraint_order:
       - resource1: dlm-clone
         resource1_action: start
