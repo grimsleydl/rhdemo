@@ -1,0 +1,6 @@
+---
+- name: "Configure container hosts"
+  hosts: app-container
+  roles:
+    - role: containers
+      become: true
