@@ -105,3 +105,10 @@
   command: pcs resource cleanup mariadb-svc
   run_once: true
   delegate_to: db-1
+
+# ondrej's ansible role reenables the firewall
+- name: allow mysql traffic
+  firewalld:
+    service: mysql
+    permanent: yes
+    state: enabled
