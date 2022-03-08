@@ -13,6 +13,7 @@ RUN apt-get update && apt-get -y --no-install-recommends install libmariadb3 lib
 RUN python -m venv .venv && \
     .venv/bin/pip install 'wheel==0.37.1' && \
     .venv/bin/pip install -r /tmp/requirements.txt
+
 FROM python:3.10.2-slim-bullseye AS runtime
 ENV PIP_DISABLE_PIP_VERSION_CHECK=1
 WORKDIR /app
