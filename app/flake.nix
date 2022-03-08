@@ -32,6 +32,7 @@
       projectDir = ./.;
       python = pkgs.python310;
       overrides = [ p2n.defaultPoetryOverrides customOverrides ];
+      extraPackages = (ps: [ ps.mariadb ]);
     };
   in rec
   {
@@ -61,10 +62,7 @@
           black
           python-language-server
           pyright
-          mariadb
-          libmysqlclient
           mariadb-connector-c
-          python310Packages.mariadb
         ];
       };
   });
