@@ -58,20 +58,24 @@ MarkupSafe = ">=2.0"
 i18n = ["Babel (>=2.7)"]
 
 [[package]]
-name = "mariadb"
-version = "1.0.10"
-description = "Python MariaDB extension"
-category = "main"
-optional = false
-python-versions = ">=3.6"
-
-[[package]]
 name = "markupsafe"
 version = "2.1.0"
 description = "Safely add untrusted strings to HTML/XML markup."
 category = "main"
 optional = false
 python-versions = ">=3.7"
+
+[[package]]
+name = "pymysql"
+version = "1.0.2"
+description = "Pure Python MySQL Driver"
+category = "main"
+optional = false
+python-versions = ">=3.6"
+
+[package.extras]
+ed25519 = ["PyNaCl (>=1.4.0)"]
+rsa = ["cryptography"]
 
 [[package]]
 name = "werkzeug"
@@ -87,7 +91,7 @@ watchdog = ["watchdog"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "75a882c3c3d2681450aa5f10af1b3f2d9bd8d74ed08f887d1b0de8b73d2159fc"
+content-hash = "0609f780a8090bc90118126902a8dfd095cab62903c22fe2faae74b72c382f82"
 
 [metadata.files]
 click = [
@@ -109,17 +113,6 @@ itsdangerous = [
 jinja2 = [
     {file = "Jinja2-3.0.3-py3-none-any.whl", hash = "sha256:077ce6014f7b40d03b47d1f1ca4b0fc8328a692bd284016f806ed0eaca390ad8"},
     {file = "Jinja2-3.0.3.tar.gz", hash = "sha256:611bb273cd68f3b993fabdc4064fc858c5b47a973cb5aa7999ec1ba405c87cd7"},
-]
-mariadb = [
-    {file = "mariadb-1.0.10-cp310-cp310-win32.whl", hash = "sha256:a27ada21397f4939bffc93f5266cc5bb188aa7d54872ec1237b1295781460f25"},
-    {file = "mariadb-1.0.10-cp310-cp310-win_amd64.whl", hash = "sha256:9a9f5f72b32a11ea619243b32ccf34a99e3333466e666f061ad90e8b5e871ee3"},
-    {file = "mariadb-1.0.10-cp37-cp37m-win32.whl", hash = "sha256:e2d5e3ec72e3195502deca357f75f842aee3648aaba9624c6676d3ecd34a370f"},
-    {file = "mariadb-1.0.10-cp37-cp37m-win_amd64.whl", hash = "sha256:ec236f8ab200088ffd80a12d94cf4a589e1246a7982f3a6fcb9197a755c9abd2"},
-    {file = "mariadb-1.0.10-cp38-cp38-win32.whl", hash = "sha256:bda35e5742e50894a225ab995d31984ef6e452723266d4e378d9addb9dc0c321"},
-    {file = "mariadb-1.0.10-cp38-cp38-win_amd64.whl", hash = "sha256:6c04dc33894181ad127b8023f10455552d95732a700a8acad4751389f0b3a111"},
-    {file = "mariadb-1.0.10-cp39-cp39-win32.whl", hash = "sha256:547e8a363bd5b211c98b084b92d72cc9b6f76da7d063ec0246f5bb85100690e3"},
-    {file = "mariadb-1.0.10-cp39-cp39-win_amd64.whl", hash = "sha256:526938f6de1e3be87b87b9f9f46cdbcc502b35afb68dbd027108ad23a97c1d79"},
-    {file = "mariadb-1.0.10.zip", hash = "sha256:79028ba6051173dad1ad0be7518389cab70239f92b4ff8b8813dae55c3f2c53d"},
 ]
 markupsafe = [
     {file = "MarkupSafe-2.1.0-cp310-cp310-macosx_10_9_universal2.whl", hash = "sha256:3028252424c72b2602a323f70fbf50aa80a5d3aa616ea6add4ba21ae9cc9da4c"},
@@ -162,6 +155,10 @@ markupsafe = [
     {file = "MarkupSafe-2.1.0-cp39-cp39-win32.whl", hash = "sha256:e6f7f3f41faffaea6596da86ecc2389672fa949bd035251eab26dc6697451d05"},
     {file = "MarkupSafe-2.1.0-cp39-cp39-win_amd64.whl", hash = "sha256:b8811d48078d1cf2a6863dafb896e68406c5f513048451cd2ded0473133473c7"},
     {file = "MarkupSafe-2.1.0.tar.gz", hash = "sha256:80beaf63ddfbc64a0452b841d8036ca0611e049650e20afcb882f5d3c266d65f"},
+]
+pymysql = [
+    {file = "PyMySQL-1.0.2-py3-none-any.whl", hash = "sha256:41fc3a0c5013d5f039639442321185532e3e2c8924687abe6537de157d403641"},
+    {file = "PyMySQL-1.0.2.tar.gz", hash = "sha256:816927a350f38d56072aeca5dfb10221fe1dc653745853d30a216637f5d7ad36"},
 ]
 werkzeug = [
     {file = "Werkzeug-2.0.3-py3-none-any.whl", hash = "sha256:1421ebfc7648a39a5c58c601b154165d05cf47a3cd0ccb70857cbdacf6c8f2b8"},

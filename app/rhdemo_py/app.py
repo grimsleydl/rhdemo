@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 from flask import Flask, render_template, request
-import mariadb
+import pymysql
 import socket
 
 app = Flask(__name__)
@@ -23,7 +23,7 @@ def main():
 
 @app.route("/index")
 def index():
-    conn = mariadb.connect(**config)
+    conn = pymysql.connect(**config)
     cur = conn.cursor()
     cur.execute("SELECT * FROM testtable")
     return render_template("index.html", data=cur.fetchall())
