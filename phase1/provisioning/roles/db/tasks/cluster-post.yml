@@ -111,4 +111,5 @@
   firewalld:
     service: mysql
     permanent: yes
+    immediate: yes
     state: enabled
