@@ -1,6 +1,0 @@
----
-- name: "Configure servers"
-  hosts: all
-  roles:
-    - role: base_system
-      become: true

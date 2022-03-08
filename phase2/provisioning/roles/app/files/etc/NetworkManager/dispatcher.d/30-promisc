@@ -1,5 +1,0 @@
-#!/bin/bash
-
-if [ "$1" == "eth1" ] && [ "$2" == "up" ]; then
-    ip link set dev "$1" promisc on
-fi

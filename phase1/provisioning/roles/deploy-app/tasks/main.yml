@@ -1,0 +1,12 @@
+---
+- name: ensure /root/app exists
+  file:
+    path: /root/app
+    state: directory
+
+- name: Clone demo repo
+  git:
+    repo: 'https://github.com/grimsleydl/rhdemo.git'
+    dest: /root/app
+    clone: yes
+    update: yes

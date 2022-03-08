@@ -1,5 +1,56 @@
 ---
-- include_tasks: setup-rhel.yml
-  when: ansible_os_family == "RedHat" or ansible_os_family == "Rocky"
+- name: Switch dnf to fastestmirror
+  lineinfile:
+    path: /etc/dnf/dnf.conf
+    line: "fastestmirror=1"
+    insertafter: skip_if_unavailable
+    state: present
+    backup: yes
 
-# - include_tasks: setup-all.yml
+# - name: Update all packages
+#   yum:
+#     name: "*"
+#     state: latest
+#     update_cache: yes
+#     update_only: yes
+
+- name: install netcat
+  yum:
+    name: "netcat"
+    state: latest
+
+- name: Disable swap
+  command: swapoff -a
+
+- name: remove swap from fstab
+  mount:
+    name: none
+    src: /dev/mapper/rl_rocky8-swap
+    fstype: swap
+    state: absent
+  when: ansible_os_family == "Rocky"
+
+- name: Remove the swap logical volume.
+  lvol:
+    vg: rl_rocky8
+    lv: swap
+    state: absent
+    force: true
+  when: ansible_os_family == "Rocky"
+
+- name: cleanup kernel cmdline
+  command: "grubby --update-kernel=ALL --remove-args 'resume rd.lvm.lv=rl_rocky8/swap'"
+  notify:
+    - run grub2-mkconfig
+  when: ansible_os_family == "Rocky"
+
+- name: rebuild grub
+  meta: "flush_handlers"
+
+- name: Reboot guest
+  reboot:
+    msg: "Ansible-initiated reboot"
+    connect_timeout: 5
+    reboot_timeout: 600
+    pre_reboot_delay: 0
+    test_command: uptime

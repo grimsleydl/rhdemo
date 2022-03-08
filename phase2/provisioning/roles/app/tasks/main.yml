@@ -1,5 +1,0 @@
----
-- include_tasks: app-rhel.yml
-  when: ansible_os_family == "RedHat" or ansible_os_family == "Rocky"
-
-# - include_tasks: setup-all.yml
