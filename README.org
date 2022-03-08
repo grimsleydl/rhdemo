@@ -1,8 +1,5 @@
 #+TITLE: Readme
 
-Building the nix package will require MariaDB development libraries installed locally--there's a Nixpkgs packaging bug involved here that I'm still investigating.
-
-
 To launch dev environment:
 - Install Nix on your system and enable Flakes
   - On non-NixOS:
