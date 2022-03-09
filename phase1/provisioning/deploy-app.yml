@@ -1,0 +1,6 @@
+---
+- name: "Deploy app"
+  hosts: app-container1, db-1
+  roles:
+    - role: deploy-app
+      become: true

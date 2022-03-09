@@ -7,16 +7,21 @@
     state: present
     backup: yes
 
-# - name: Update all packages
-#   yum:
-#     name: "*"
-#     state: latest
-#     update_cache: yes
-#     update_only: yes
+- name: Update all packages
+  yum:
+    name: "*"
+    state: latest
+    update_cache: yes
+    update_only: yes
 
 - name: install netcat
   yum:
     name: "netcat"
+    state: latest
+
+- name: install git
+  yum:
+    name: "git"
     state: latest
 
 - name: Disable swap

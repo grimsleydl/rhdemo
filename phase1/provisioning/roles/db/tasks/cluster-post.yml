@@ -39,19 +39,6 @@
   command: vgchange --setautoactivation n vgsan00
   ignore_errors: yes
 
-# - name: mount mysql storage
-#   mount:
-#     path: /san/mysql-fs
-#     src: /dev/vgsan00/mysql
-#     fstype: xfs
-#     state: mounted
-
-# - name: enable mariadb service
-#   service:
-#     name: mariadb
-#     state: started
-#     enabled: true
-
 - name: copy /root/.my.cnf
   copy:
     src: "../files/root/.my.cnf"

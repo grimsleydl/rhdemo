@@ -10,3 +10,13 @@
     dest: /root/app
     clone: yes
     update: yes
+
+- name: ensure /root/unpack exists
+  file:
+    path: /root/unpack
+    state: directory
+
+- name: copy example app to server and extract
+  unarchive:
+    src: ~/repos/presentations/rhdemo/tmp/rhdemo_py.tar.gz
+    dest: /root/unpack
