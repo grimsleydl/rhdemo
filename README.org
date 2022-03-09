@@ -1,6 +1,6 @@
 #+TITLE: Readme
 
-To launch dev environment:
+* To launch dev environment
 - Install Nix on your system and enable Flakes
   - On non-NixOS:
     - edit either ~~/.config/nix/nix.conf~ or ~/etc/nix/nix.conf~ and add the following line:
@@ -19,3 +19,14 @@ To launch dev environment:
 
 - ~cd~ into the ~app/~ directory
 - run ~nix develop~
+
+* Dependency graphs
+In NixOS or a Nix shell environment with the package you want a graph for:
+#+begin_src shell
+nix-store --query --graph $(which python) | dot -Tpng > python.png
+#+end_src
+
+You can also supply a Nix store path directly:
+#+begin_src shell
+nix-store --query --graph /nix/store/c6dwl65z7z9vyadfzp5aqbfv6bi1afnz-python3-3.10.2/bin/python | dot -Tpng > python.png
+#+end_src
