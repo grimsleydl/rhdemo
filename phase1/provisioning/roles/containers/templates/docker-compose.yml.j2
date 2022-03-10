@@ -1,0 +1,45 @@
+---
+version: '2.4'
+services:
+  app:
+    build:
+      context: ../app/
+    container_name: app-py
+    image: app-py
+    networks:
+      db_macvlan:
+      app_macvlan:
+        ipv4_address: {{ ipv4_address }}
+    restart: unless-stopped
+    environment:
+      APP_LISTEN: {{ ipv4_address }}
+    labels:
+      - "grimsleydl.label=app-py-{{ host_hostname }}"
+
+
+networks:
+  {{ db_network_name }}:
+    name: {{ db_network_name }}
+    driver: macvlan
+    driver_opts:
+      parent: {{ db_parent }}
+    ipam:
+      config:
+        - subnet: "{{ db_subnet }}"
+          ip_range: "{{ db_ip_range }}"
+          gateway: "{{ db_gateway }}"
+          aux_addresses:
+            host1: "{{ db_aux_address1 }}"
+
+  {{ app_network_name }}:
+    name: {{ app_network_name }}
+    driver: macvlan
+    driver_opts:
+      parent: {{ app_parent }}
+    ipam:
+      config:
+        - subnet: "{{ app_subnet }}"
+          ip_range: "{{ app_ip_range }}"
+          gateway: "{{ app_gateway }}"
+          aux_addresses:
+            host1: "{{ app_aux_address1 }}"

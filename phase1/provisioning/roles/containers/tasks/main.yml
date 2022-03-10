@@ -64,16 +64,20 @@
     state: started
     enabled: yes
 
-- name: ensure /root/bin exists
+- name: ensure /root dirs exist
   file:
-    path: /root/bin
+    path: "/root/{{ item }}"
     state: directory
+  with_items:
+    - bin
+    - app
+    - docker
 
 - name: install docker compose
   get_url:
     url: "{{ docker_compose_path }}"
     dest: /root/bin/docker-compose
-    mode: '0755'
+    mode: 0755
 
 - name: enable promiscuous mode on eth1
   command: ip link set dev eth1 promisc on
@@ -84,4 +88,34 @@
     dest: /etc/NetworkManager/dispatcher.d/30-promisc
     owner: root
     group: root
-    mode: '0755'
+    mode: 0755
+
+- name: copy dockerfile
+  copy:
+    src: ../../../../../app/Dockerfile
+    dest: /root/app/Dockerfile
+    owner: root
+    group: root
+    mode: 0644
+
+- name: "add templated docker-compose file"
+  tags: docker-compose
+  template:
+    src: docker-compose.yml.j2
+    dest: /root/docker/docker-compose.yml
+    mode: 0644
+
+- name: copy app directory to container host
+  copy:
+    src: "../../../../../app/{{ item }}"
+    dest: /root/app
+  with_items:
+    - rhdemo_py
+    - poetry.lock
+    - pyproject.toml
+
+- name: build container
+  command: chdir=/root/docker /root/bin/docker-compose build
+
+- name: launch container
+  command: chdir=/root/docker /root/bin/docker-compose up -d
