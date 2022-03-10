@@ -93,7 +93,7 @@
   run_once: true
   delegate_to: db-1
 
-# ondrej's ansible role reenables the firewall
+# ondrej's ansible role reenables the firewall, might as well use it...
 - name: allow mysql traffic
   firewalld:
     service: mysql

@@ -7,7 +7,7 @@
       tags: provision
     - role: db
       become: true
-      tags: [ provision, db-setup ]
+      tags: [ provision ]
   tasks:
     - import_tasks: roles/db/tasks/db-storage.yml
       become: true
