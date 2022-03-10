@@ -2,13 +2,15 @@
 from flask import Flask, render_template, request
 import pymysql
 import socket
+import os
 
 app = Flask(__name__)
 app.debug = True
 
+listen_address = os.getenv("APP_LISTEN", "0.0.0.0")
 
 config = {
-    "host": "192.168.150.200",
+    "host": "192.168.160.200",
     "port": 3306,
     "user": "flask",
     "password": "PnWJ9abAq3EAfEeqy7e",
@@ -31,10 +33,10 @@ def index():
 
 @app.route("/hostname")
 def return_hostname():
-    return "example flask app served from {} (fqdn: {}) to {}".format(
-        socket.gethostname(), socket.getfqdn(), request.remote_addr
+    return "example flask app served from {} (fqdn: {}, ip: {}) to {}".format(
+        socket.gethostname(), socket.getfqdn(), listen_address, request.remote_addr
     )
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
+    app.run(host=listen_address, port=5000)
