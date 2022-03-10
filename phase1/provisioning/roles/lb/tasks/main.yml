@@ -12,14 +12,13 @@
     group: root
     mode: '0644'
   notify: Reload nginx
+
 - name: allow nginx proxying
   command: setsebool -P httpd_can_network_connect on
 
-# - name: Copy nginx lb file
-#   ansible.builtin.copy:
-#     src: ../files/etc/nginx/conf.d/lb.example.com.conf
-#     dest: /etc/nginx/conf.d/lb.example.com.conf
-#     owner: root
-#     group: root
-#     mode: '0644'
-#   notify: Reload nginx
+- name: allow http traffic
+  firewalld:
+    service: http
+    immediate: yes
+    permanent: yes
+    state: enabled
