@@ -33,6 +33,7 @@ Vagrant.configure('2') do |config|
   db_cluster_subnet = '192.168.150'
   iscsi_subnet = '192.168.140'
 
+  # VANILLA APP HOSTS
   N = 3
   (1..N).each do |node_id|
     config.vm.define "app-#{node_id}" do |node|
@@ -95,6 +96,7 @@ Vagrant.configure('2') do |config|
     end
   end
 
+  # LB
   (1..1).each do |node_id|
     config.vm.define "lb-#{node_id}" do |node|
       config.vm.provider :libvirt do |libvirt|
@@ -121,6 +123,7 @@ Vagrant.configure('2') do |config|
     end
   end
 
+  #JUMPHOST?
   config.vm.define 'jumphost' do |node|
     config.vm.provider :libvirt do |libvirt|
       libvirt.memory = 2048
@@ -141,6 +144,7 @@ Vagrant.configure('2') do |config|
     end
   end
 
+  #DB
   db_nodes = 2
   (1..db_nodes).each do |node_id|
     config.vm.define "db-#{node_id}" do |node|
@@ -166,7 +170,7 @@ Vagrant.configure('2') do |config|
           # Disable default limit to connect to all the nodes
           ansible.limit = 'all'
           ansible.playbook = 'provisioning/db.yml'
-          ansible.tags = ['provision']
+          ansible.tags = ['provision', 'pcs-setup']
         end
       end
     end
