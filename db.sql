@@ -1,5 +1,5 @@
 CREATE DATABASE rhdemo;
 CREATE TABLE rhdemo.testtable (id INT AUTO_INCREMENT PRIMARY KEY, TKTKTK VARCHAR(255) NOT NULL);
-INSERT INTO rhdemo.testtable (TKTKTK) VALUES ('tk1'), ('tk2'), ('tk3')
+INSERT INTO rhdemo.testtable (TKTKTK) VALUES ('tk1'), ('tk2'), ('tk3');
 CREATE USER 'flask'@'%' IDENTIFIED BY 'PnWJ9abAq3EAfEeqy7e';
 GRANT ALL PRIVILEGES ON 'rhdemo'.* TO 'flask'@'%' IDENTIFIED BY 'PnWJ9abAq3EAfEeqy7e';
