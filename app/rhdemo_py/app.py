@@ -5,16 +5,17 @@ import socket
 import os
 
 app = Flask(__name__)
-app.debug = True
 
 listen_address = os.getenv("APP_LISTEN", "0.0.0.0")
 db_address = os.getenv("DB_LISTEN", "192.168.160.200")
+db_pass = os.getenv("FLASK_DB_PASS")
+
 
 config = {
     "host": db_address,
     "port": 3306,
     "user": "flask",
-    "password": "PnWJ9abAq3EAfEeqy7e",
+    "password": db_pass,
     "database": "rhdemo",
 }
 
