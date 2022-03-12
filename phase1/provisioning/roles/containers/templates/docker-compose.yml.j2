@@ -1,11 +1,12 @@
 ---
 version: '2.4'
 services:
-  app:
+  app-macvlan:
     build:
       context: ../app/
-    container_name: app-py
+    container_name: app-py-macvlan
     image: app-py
+    dns: {{ external_dns }}
     networks:
       db_macvlan:
       app_macvlan:
@@ -13,33 +14,58 @@ services:
     restart: unless-stopped
     environment:
       APP_LISTEN: {{ ipv4_address }}
+      FLASK_DB_PASS: ${FLASK_DB_PASS}
     labels:
-      - "grimsleydl.label=app-py-{{ host_hostname }}"
+      - "grimsleydl.label=app-py-macvlan-{{ host_hostname }}"
+  app-bridged:
+    build:
+      context: ../app/
+    container_name: app-py-bridged
+    image: app-py
+    dns: {{ external_dns }}
+    networks:
+      - db_bridge
+      - app_bridge
+    restart: unless-stopped
+    environment:
+      FLASK_DB_PASS: ${FLASK_DB_PASS}
+    ports:
+      - "5000:5000"
+    labels:
+      - "grimsleydl.label=app-py-bridge-{{ host_hostname }}"
 
 
 networks:
-  {{ db_network_name }}:
-    name: {{ db_network_name }}
+  {{ db_macvlan_network_name }}:
+    name: {{ db_macvlan_network_name }}
     driver: macvlan
     driver_opts:
-      parent: {{ db_parent }}
+      parent: {{ db_macvlan_parent }}
     ipam:
       config:
-        - subnet: "{{ db_subnet }}"
-          ip_range: "{{ db_ip_range }}"
-          gateway: "{{ db_gateway }}"
+        - subnet: "{{ db_macvlan_subnet }}"
+          ip_range: "{{ db_macvlan_ip_range }}"
+          gateway: "{{ db_macvlan_gateway }}"
           aux_addresses:
-            host1: "{{ db_aux_address1 }}"
+            host1: "{{ db_macvlan_aux_address1 }}"
 
-  {{ app_network_name }}:
-    name: {{ app_network_name }}
+  {{ app_macvlan_network_name }}:
+    name: {{ app_macvlan_network_name }}
     driver: macvlan
     driver_opts:
-      parent: {{ app_parent }}
+      parent: {{ app_macvlan_parent }}
     ipam:
       config:
-        - subnet: "{{ app_subnet }}"
-          ip_range: "{{ app_ip_range }}"
-          gateway: "{{ app_gateway }}"
+        - subnet: "{{ app_macvlan_subnet }}"
+          ip_range: "{{ app_macvlan_ip_range }}"
+          gateway: "{{ app_macvlan_gateway }}"
           aux_addresses:
-            host1: "{{ app_aux_address1 }}"
+            host1: "{{ app_macvlan_aux_address1 }}"
+
+  {{ db_bridge_network_name }}:
+    name: {{ db_bridge_network_name }}
+    driver: bridge
+
+  {{ app_bridge_network_name }}:
+    name: {{ app_bridge_network_name }}
+    driver: bridge
