@@ -1,8 +1,9 @@
 FROM python:3.10.2-slim-bullseye AS base
-ENV PIP_DISABLE_PIP_VERSION_CHECK=1
 WORKDIR /app
 
 FROM base as poetry
+ENV PIP_DISABLE_PIP_VERSION_CHECK=1
+WORKDIR /app
 RUN pip install poetry==1.1.12
 COPY poetry.lock pyproject.toml /app/
 RUN poetry export -o requirements.txt
@@ -39,5 +40,4 @@ USER user
 EXPOSE 5000
 
 ENTRYPOINT ["/tini", "--"]
-
 CMD ["python", "/app/app.py"]
