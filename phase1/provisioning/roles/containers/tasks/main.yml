@@ -114,6 +114,12 @@
     - poetry.lock
     - pyproject.toml
 
+- name: copy env file to container host
+  copy:
+    src: "../../../secret/.env"
+    dest: /root/docker/.env
+    mode: 0600
+
 - name: build container
   command: chdir=/root/docker /root/bin/docker-compose build
 
