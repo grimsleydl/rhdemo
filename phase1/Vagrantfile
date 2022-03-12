@@ -50,6 +50,7 @@ Vagrant.configure('2') do |config|
           # Disable default limit to connect to all the nodes
           ansible.groups = {
             'app' => ['app-1', 'app-2', 'app-3'],
+            'app_container' => ['app-container-1', 'app-container-2', 'app-container-3'],
             'lb' => ['lb-1'],
             'db' => ['db-1', 'db-2']
           }
@@ -64,8 +65,8 @@ Vagrant.configure('2') do |config|
   end
 
   # CONTAINER HOSTS
-  N = 3
-  (1..N).each do |node_id|
+  C = 3
+  (1..C).each do |node_id|
     config.vm.define "app-container-#{node_id}" do |node|
       config.vm.provider :libvirt do |libvirt|
         libvirt.memory = 2048
@@ -76,10 +77,11 @@ Vagrant.configure('2') do |config|
       node.vm.network 'private_network', ip: "#{app_container_subnet}.#{20 + node_id}", netmask: '255.255.255.0'
       node.vm.network 'private_network', ip: "#{db_subnet}.#{20 + node_id}", netmask: '255.255.255.0'
       # Only execute the Ansible provisioner once, after all the nodes are up and ready.
-      if node_id == N
+      if node_id == C
         node.vm.provision :ansible do |ansible|
           # Disable default limit to connect to all the nodes
           ansible.groups = {
+            'app' => ['app-1', 'app-2', 'app-3'],
             'app_container' => ['app-container-1', 'app-container-2', 'app-container-3'],
             'lb' => ['lb-1'],
             'db' => ['db-1', 'db-2']
@@ -112,6 +114,7 @@ Vagrant.configure('2') do |config|
       # Only execute the Ansible provisioner once, after all the nodes are up and ready.
       node.vm.provision :ansible do |ansible|
         ansible.groups = {
+          'app' => ['app-1', 'app-2', 'app-3'],
           'app_container' => ['app-container-1', 'app-container-2', 'app-container-3'],
           'lb' => ['lb-1'],
           'db' => ['db-1', 'db-2']
@@ -136,7 +139,10 @@ Vagrant.configure('2') do |config|
     # Only execute the Ansible provisioner once, after all the nodes are up and ready.
     node.vm.provision :ansible do |ansible|
       ansible.groups = {
-        'jumphost' => ['jumphost']
+        'app' => ['app-1', 'app-2', 'app-3'],
+        'app_container' => ['app-container-1', 'app-container-2', 'app-container-3'],
+        'lb' => ['lb-1'],
+        'db' => ['db-1', 'db-2']
       }
       # Disable default limit to connect to all the nodes
       ansible.limit = 'all'
@@ -161,6 +167,9 @@ Vagrant.configure('2') do |config|
       if node_id == db_nodes
         node.vm.provision :ansible do |ansible|
           ansible.groups = {
+            'app' => ['app-1', 'app-2', 'app-3'],
+            'app_container' => ['app-container-1', 'app-container-2', 'app-container-3'],
+            'lb' => ['lb-1'],
             'db' => ['db-1', 'db-2']
           }
           ansible.host_vars = {
