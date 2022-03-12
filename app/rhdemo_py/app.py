@@ -33,8 +33,8 @@ def index():
 
 @app.route("/hostname")
 def return_hostname():
-    return "example flask app served from {} (fqdn: {}, ip: {}) to {}".format(
-        socket.gethostname(), socket.getfqdn(), listen_address, request.remote_addr
+    return "example flask app served from {} (fqdn: {}, ip: {}) to {} (via {})".format(
+        socket.gethostname(), socket.getfqdn(), listen_address, request.remote_addr, *request.access_route
     )
 
 
