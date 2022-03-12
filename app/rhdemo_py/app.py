@@ -8,9 +8,10 @@ app = Flask(__name__)
 app.debug = True
 
 listen_address = os.getenv("APP_LISTEN", "0.0.0.0")
+db_address = os.getenv("DB_LISTEN", "192.168.160.200")
 
 config = {
-    "host": "192.168.160.200",
+    "host": db_address,
     "port": 3306,
     "user": "flask",
     "password": "PnWJ9abAq3EAfEeqy7e",
