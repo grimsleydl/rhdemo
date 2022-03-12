@@ -2,16 +2,33 @@
 docker_ce_repo: "https://download.docker.com/linux/centos/docker-ce.repo"
 docker_compose_path: "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-Linux-x86_64"
 
-db_network_name: db_macvlan
-db_parent: eth2
-db_subnet: 192.168.160.0/24
-db_ip_range: 192.168.160.128/27
-db_aux_address1: 192.168.160.128
-db_gateway: 192.168.160.1
+db_macvlan_network_name: db_macvlan
+db_macvlan_parent: eth2
+db_macvlan_subnet: 192.168.160.0/24
+db_macvlan_ip_range: 192.168.160.128/27
+db_macvlan_aux_address1: 192.168.160.128
+db_macvlan_gateway: 192.168.160.1
 
-app_network_name: app_macvlan
-app_parent: eth1
-app_subnet: 192.168.170.0/24
-app_ip_range: 192.168.170.128/27
-app_aux_address1: 192.168.170.128
-app_gateway: 192.168.170.1
+app_macvlan_network_name: app_macvlan
+app_macvlan_parent: eth1
+app_macvlan_subnet: 192.168.170.0/24
+app_macvlan_ip_range: 192.168.170.128/27
+app_macvlan_aux_address1: 192.168.170.128
+app_macvlan_gateway: 192.168.170.1
+
+
+db_bridge_network_name: db_bridge
+db_bridge_parent: eth2
+db_bridge_subnet: 192.168.160.0/24
+db_bridge_ip_range: 192.168.160.128/27
+db_bridge_aux_address1: 192.168.160.128
+db_bridge_gateway: 192.168.160.1
+
+app_bridge_network_name: app_bridge
+app_bridge_parent: eth1
+app_bridge_subnet: 192.168.170.0/24
+app_bridge_ip_range: 192.168.170.128/27
+app_bridge_aux_address1: 192.168.170.128
+app_bridge_gateway: 192.168.170.1
+
+external_dns: 10.0.0.1
