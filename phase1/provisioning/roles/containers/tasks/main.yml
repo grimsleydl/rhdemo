@@ -96,14 +96,14 @@
     dest: /root/app/Dockerfile
     owner: root
     group: root
-    mode: 0644
+    mode: 0600
 
 - name: "add templated docker-compose file"
   tags: docker-compose
   template:
     src: docker-compose.yml.j2
     dest: /root/docker/docker-compose.yml
-    mode: 0644
+    mode: 0600
 
 - name: copy app directory to container host
   copy:
