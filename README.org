@@ -3,7 +3,7 @@
 * To launch dev environment
 - Install Nix on your system and enable Flakes
   - On non-NixOS:
-    - edit either ~~/.config/nix/nix.conf~ or ~/etc/nix/nix.conf~ and add the following line:
+    - edit either ~$HOME/.config/nix/nix.conf~ or ~/etc/nix/nix.conf~ and add the following line:
       #+begin_src conf
       experimental-features = nix-command flakes
       #+end_src
