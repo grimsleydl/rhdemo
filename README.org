@@ -1,6 +1,9 @@
-#+TITLE: Readme
+~vagrant up app-container-1 app-container-2 app-container-3 db-1 db-2 lb-1~ will launch the full container environment (takes some time)
 
-* To launch dev environment
+Flask app should work without the DB, other than the endpoint that hits the DB (in case you don't want to set up an iscsi target for the PCS storage)
+
+Bridge mode containers are not behind Nginx reverse proxy by default.
+* Launch Python dev environment
 - Install Nix on your system and enable Flakes
   - On non-NixOS:
     - edit either ~$HOME/.config/nix/nix.conf~ or ~/etc/nix/nix.conf~ and add the following line:
@@ -20,10 +23,12 @@
 - ~cd~ into the ~app/~ directory
 - run ~nix develop~
 
-* Dependency graphs
+* Generate Dependency graphs
+Using Nix, dependency graphs like the ones in ~./images~ can be generated for any program, with a little legwork:
+
 In NixOS or a Nix shell environment with the package you want a graph for:
 #+begin_src shell
-nix-store --query --graph $(which python) | dot -Tpng > python.png
+nix-store --query --graph $(which vagrant) | dot -Tpng > vagrant.png
 #+end_src
 
 You can also supply a Nix store path directly:
