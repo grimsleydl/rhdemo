@@ -28,7 +28,7 @@ Bridge mode containers are not behind Nginx reverse proxy by default.
 * Kubernetes manifest
 So as not to check in the private registry URL (and to avoid the overhead of helm), ~demo-k8s.yml~ uses an env variable.
 
-Apply like so:
+Apply like so (assuming you have an image built):
 #+begin_src shell
 REGISTRY=[insert image uri] envsubst < demo-k8s.yml | kubectl apply -f -
 #+end_src
