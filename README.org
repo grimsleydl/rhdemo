@@ -22,7 +22,13 @@ Bridge mode containers are not behind Nginx reverse proxy by default.
 
 - ~cd~ into the ~app/~ directory
 - run ~nix develop~
+* Kubernetes manifest
+So as not to check in the private registry URL (and to avoid the overhead of helm), ~demo-k8s.yml~ uses an env variable.
 
+Apply like so:
+#+begin_src shell
+REGISTRY=[insert image uri] envsubst < demo-k8s.yml | kubectl apply -f -
+#+end_src
 * Generate Dependency graphs
 Using Nix, dependency graphs like the ones in ~./images~ can be generated for any program, with a little legwork:
 
