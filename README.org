@@ -1,4 +1,7 @@
-~vagrant up app-container-1 app-container-2 app-container-3 db-1 db-2 lb-1~ will launch the full container environment (takes some time)
+Environment used for screenshots in container presentation.
+
+Somewhat messy, but this will launch the full container environment (takes some time):
+~vagrant up app-container-1 app-container-2 app-container-3 db-1 db-2 lb-1~
 
 Flask app should work without the DB, other than the endpoint that hits the DB (in case you don't want to set up an iscsi target for the PCS storage)
 
