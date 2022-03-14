@@ -10,3 +10,6 @@
 ### Vagrant Patch ###
 *.box
 /app/.direnv/
+/app/result
+__pycache__/
+/phase1/provisioning/secret/
