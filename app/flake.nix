@@ -39,7 +39,7 @@
       name = "rhdemo-py";
       contents = [ pkgs.python310 app pkgs.bash pkgs.coreutils ];
       config = {
-        Cmd = [ "${app}/bin/rhdemo-py" ];
+        Cmd = [ "${app}/bin/main" ];
       };
     };
 

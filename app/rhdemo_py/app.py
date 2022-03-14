@@ -21,7 +21,7 @@ config = {
 
 
 @app.route("/", methods=["GET"])
-def main():
+def hello():
     return "Hello, yes this is Flask"
 
 
@@ -44,5 +44,9 @@ def return_hostname():
     )
 
 
-if __name__ == "__main__":
+def main():
     app.run(host=listen_address, port=5000)
+
+
+if __name__ == "__main__":
+    main()
